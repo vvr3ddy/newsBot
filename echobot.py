@@ -35,8 +35,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-id = str(update.message.chat_id)
-news_api_key = os.environ.get("news_api_key","")
+
 
 def escape_html(message):
     return message.replace("&", "&amp;").replace("<", "&lt;")
@@ -49,6 +48,10 @@ def start(update, context):
 
 def indiaNews(update, context):
     """Send a message when the command /gnews is issued."""
+    
+    id = str(update.message.chat_id)
+    news_api_key = os.environ.get("news_api_key","")
+
     url = "http://newsapi.org/v2/top-headlines?sources=google-news-in&apiKey={}".format(news_api_key)
     response = requests.get(url)
     json_data = response.json()
@@ -97,6 +100,10 @@ def indiaNews(update, context):
 
 def world_news(update, context):
     """Send a message when the command /news is issued."""
+    
+    id = str(update.message.chat_id)
+    news_api_key = os.environ.get("news_api_key","")
+
     received_message = update.message.text
     splitMsg = received_message.split(" ", 1)
     if len(splitMsg) == 1:
@@ -165,7 +172,7 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("inews", indiaNews))
-    dp.add.handler(CommandHandler("news", world_news)) 
+    dp.add_handler(CommandHandler("news", world_news)) 
     
 
     # log all errors
