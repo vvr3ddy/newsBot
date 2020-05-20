@@ -23,7 +23,8 @@ from pprint import pprint
 from html import escape
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from telegram import chat
+from telegram import bot, chat, update
+import telegram
 
 
 
@@ -34,6 +35,8 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+
+
 def escape_html(message):
     return message.replace("&", "&amp;").replace("<", "&lt;")
 
@@ -43,68 +46,112 @@ def start(update, context):
     """Send a message when the command /start is issued."""
     update.message.reply_text('Hi 😊')
 
-def gNews(update, context):
-    """Send a message when the command /start is issued."""
-    id = update.message.chat_id
+def indiaNews(update, context):
+    """Send a message when the command /gnews is issued."""
+    
+    id = str(update.message.chat_id)
     news_api_key = os.environ.get("news_api_key","")
+
     url = "http://newsapi.org/v2/top-headlines?sources=google-news-in&apiKey={}".format(news_api_key)
     response = requests.get(url)
     json_data = response.json()
     received_message = update.message.text
     splitMsg = received_message.split(" ", 1)
+    error_image = str("https://cheapdigitalservices.com/wp-content/uploads/error-with-wordpress.png")
     if len(splitMsg) == 1:
         splitMsg.append('0')
+    
     value = int(splitMsg[1])
     if value > 10  :
         value = 10
     elif value <= 0 :
         value = 10
-    update.message.reply_text('News from Google Feed')
-    for count in range(value):
-        
-        # Get data from the JSON Response
-        author = json_data['articles'][count]['author']
-        title = json_data['articles'][count]['title']
-        newsUrl = json_data['articles'][count]['url']
-        url_string = str(newsUrl)
-        description = json_data['articles'][count]['description']
-        image = json_data['articles'][count]['urlToImage']
-        # If no author is assigned to the headline
-        if(author == None):
-            author = 'Not Announced'
 
-        # Finally spam the user with news 🌚
-        context.bot.send_photo(chat_id = str(id), photo = str(image), caption =
-                                f"\n<b>HeadLine :</b><i>{escape_html(title)}</i>"
-                                f"\n<b>Author   :</b><i>{escape_html(author)}</i>"
-                                f'\n<b>Source   :</b><a href ="{url_string}">Link</a>',
-                                parse_mode="HTML")  
+    if str(json_data['status']) == 'ok' :    
+        update.message.reply_text("""News from Google Feed
+            powered by : NewsApi""")
+        for count in range(value):
+            # Get data from the JSON Response
+            author = json_data['articles'][count]['author']
+            title = json_data['articles'][count]['title']
+            newsUrl = json_data['articles'][count]['url']
+            url_string = str(newsUrl)
+            description = json_data['articles'][count]['description']
+            image = json_data['articles'][count]['urlToImage']
+            # If no author is assigned to the headline
+            if(author == None):
+                author = 'Not Announced'
 
+            # Finally spam the user with news 🌚
+            bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+            context.bot.send_photo(chat_id = id, photo = str(image), caption =
+                                    f"\n<b>HeadLine :</b><i>{escape_html(title)}</i>"
+                                    f"\n<b>Author   :</b><i>{escape_html(author)}</i>"
+                                    f'\n<b>Source   :</b><a href ="{url_string}">Link</a>',
+                                    parse_mode="HTML")  
+    else :
+        bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+        context.bot.send_photo(chat_id = id, photo = str(image), caption =
+                                    f"\n<b>The Bot has encountered some error.</b>"
+                                    f"\n<b>What can you do ?</b>"
+                                    f"\n<i>1. Retry the same command again.</i>"
+                                    f"\n<i>2. Notify the creator about the issue.</i>",
+                                    parse_mode="HTML")  
 
-def translate(update, context):
-    """Send a message when the command /tl_vulkan is issued."""
-    o_text = update.message.text
-    splitMsg = o_text.split(" ", 2)
-    language = splitMsg[1]
-    query = splitMsg[2]
-    try:
-        url = "https://api.funtranslations.com/translate/{0}.json?text={1}".format(language, query.replace(" ", "%20"))
-        res = requests.get(url)
-        data = res.json()
-        text = data['contents']['text']
-        translated = data['contents']['translated']
-        translation = data['contents']['translation']
-        print(o_text)
-        print(res)
-        pprint(data)
-        update.message.reply_text("""
-        Gotcha... Here goes your translation...
-        Original Text       : {0}
-        Translated Text     : {1}
-        Translated Language : {2}
-        """.format(o_text, translated, translation))
-    except simplejson.JSONDecodeError:
-        update.message.reply_text('Error occured Please try again after some time')
+def world_news(update, context):
+    """Send a message when the command /news is issued."""
+    
+    id = str(update.message.chat_id)
+    news_api_key = os.environ.get("news_api_key","")
+
+    received_message = update.message.text
+    splitMsg = received_message.split(" ", 1)
+    if len(splitMsg) == 1:
+        splitMsg.append('0')
+        update.message.reply_text("Number not specified using default as 10")
+        splitMsg.append('us')
+        update.message.reply_text("Country not specified Using default country as US")
+    
+    value = int(splitMsg[1])
+    country = splitMsg[2]
+    if value > 10  :
+        value = 10
+    elif value <= 0 :
+        value = 10
+
+    url = "http://newsapi.org/v2/top-headlines?country={0}&apiKey={1}".format(country, news_api_key)
+    response = requests.get(url)
+    json_data = response.json()
+    error_image = str("https://cheapdigitalservices.com/wp-content/uploads/error-with-wordpress.png")
+    if str(json_data['status']) == 'ok' :    
+        update.message.reply_text("""Top {} Headlines from {} powered by : NewsApi""".format(value, country))
+        for count in range(value):
+            # Get data from the JSON Response
+            source = json_data['articles'][count]['source']['name']
+            title = json_data['articles'][count]['title']
+            newsUrl = json_data['articles'][count]['url']
+            url_string = str(newsUrl)
+            description = json_data['articles'][count]['description']
+            image = json_data['articles'][count]['urlToImage']
+            # If no author is assigned to the headline
+            if(source == None):
+                source = 'Not Announced'
+
+            # Finally spam the user with news 🌚
+            bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+            context.bot.send_photo(chat_id = id, photo = str(image), caption =
+                                    f"\n<b>HeadLine  :</b><i>{escape_html(title)}</i>"
+                                    f"\n<b>Source    :</b><i>{escape_html(source)}</i>"
+                                    f'\n<b>Full News :</b><a href ="{url_string}">Link</a>',
+                                    parse_mode="HTML")  
+    else :
+        bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+        context.bot.send_photo(chat_id = id, photo = str(image), caption =
+                                    f"\n<b>The Bot has encountered some error.</b>"
+                                    f"\n<b>What can you do ?</b>"
+                                    f"\n<i>1. Retry the same command again.</i>"
+                                    f"\n<i>2. Notify the creator about the issue.</i>",
+                                    parse_mode="HTML")  
 
 
 def error(update, context):
@@ -124,9 +171,8 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("tl", translate))
-    dp.add_handler(CommandHandler("gnews", gNews))
-    #dp.add.handler(CommandHandler("tnews", tNews))
+    dp.add_handler(CommandHandler("inews", indiaNews))
+    dp.add_handler(CommandHandler("news", world_news)) 
     
 
     # log all errors
