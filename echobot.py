@@ -66,8 +66,8 @@ def gNews(update, context):
         value = 10
 
     if str(json_data['status']) == 'ok' :    
-        update.message.reply_text('News from Google Feed\
-            powered by : NewsApi')
+        update.message.reply_text("""News from Google Feed
+            powered by : NewsApi""")
         for count in range(value):
             # Get data from the JSON Response
             author = json_data['articles'][count]['author']
