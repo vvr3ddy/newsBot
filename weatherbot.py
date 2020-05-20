@@ -2,18 +2,6 @@
 # -*- coding: utf-8 -*-
 # This program is dedicated to the public domain under the CC0 license.
 
-"""
-Simple Bot to reply to Telegram messages.
-
-First, a few handler functions are defined. Then, those functions are passed to
-the Dispatcher and registered at their respective places.
-Then, the bot is started and runs until we press Ctrl-C on the command line.
-
-Usage:
-Basic Echobot example, repeats messages.
-Press Ctrl-C on the command line or send a signal to the process to stop the
-bot.
-"""
 import os
 import logging
 import requests
@@ -83,14 +71,14 @@ def indiaNews(update, context):
                 author = 'Not Announced'
 
             # Finally spam the user with news 🌚
-            bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+            context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
             context.bot.send_photo(chat_id = id, photo = str(image), caption =
                                     f"\n<b>HeadLine :</b><i>{escape_html(title)}</i>"
                                     f"\n<b>Author   :</b><i>{escape_html(author)}</i>"
                                     f'\n<b>Source   :</b><a href ="{url_string}">Link</a>',
                                     parse_mode="HTML")  
     else :
-        bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+        context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
         context.bot.send_photo(chat_id = id, photo = str(image), caption =
                                     f"\n<b>The Bot has encountered some error.</b>"
                                     f"\n<b>What can you do ?</b>"
@@ -138,14 +126,14 @@ def world_news(update, context):
                 source = 'Not Announced'
 
             # Finally spam the user with news 🌚
-            bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+            context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
             context.bot.send_photo(chat_id = id, photo = str(image), caption =
                                     f"\n<b>HeadLine  :</b><i>{escape_html(title)}</i>"
                                     f"\n<b>Source    :</b><i>{escape_html(source)}</i>"
                                     f'\n<b>Full News :</b><a href ="{url_string}">Link</a>',
                                     parse_mode="HTML")  
     else :
-        bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+        context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
         context.bot.send_photo(chat_id = id, photo = str(image), caption =
                                     f"\n<b>The Bot has encountered some error.</b>"
                                     f"\n<b>What can you do ?</b>"
