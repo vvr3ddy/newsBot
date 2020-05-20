@@ -23,7 +23,8 @@ from pprint import pprint
 from html import escape
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from telegram import chat
+from telegram import bot, chat
+import telegram
 
 
 
@@ -59,9 +60,10 @@ def gNews(update, context):
         value = 10
     elif value <= 0 :
         value = 10
-    update.message.reply_text('News from Google Feed')
+    update.message.reply_text('News from Google Feed\
+        powered by : NewsApi')
     for count in range(value):
-        
+        bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
         # Get data from the JSON Response
         author = json_data['articles'][count]['author']
         title = json_data['articles'][count]['title']
