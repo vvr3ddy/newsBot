@@ -67,6 +67,8 @@ def indiaNews(update, context):
             # If no author is assigned to the headline
             if(author == None):
                 author = 'Not Announced'
+            if(image == None):
+                image = 'https://bitsofco.de/content/images/2018/12/Screenshot-2018-12-16-at-21.06.29.png'
 
             # Finally spam the user with news 🌚
             #bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
@@ -121,6 +123,8 @@ def world_news(update, context):
             # If no author is assigned to the headline
             if(source == None):
                 source = 'Not Announced'
+            if(image == None):
+                image = 'https://bitsofco.de/content/images/2018/12/Screenshot-2018-12-16-at-21.06.29.png'
 
             # Finally spam the user with news 🌚
             context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
