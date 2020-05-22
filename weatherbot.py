@@ -135,6 +135,59 @@ def world_news(update, context):
                                     f"\n<i>2. Notify the creator about the issue.</i>",
                                     parse_mode="HTML")  
 
+def categ(update, context):
+    """Send a message when the command /news is issued."""
+    id = str(update.message.chat_id)
+    news_api_key = "8a26f01fc57841feba29455a2acb0105"
+    received_message = update.message.text
+    splitMsg = received_message.split(" ", 3)   
+    if len(splitMsg) == 1:
+        splitMsg.append('us')
+        update.message.reply_text("Country not specified. Using default country as US")
+        splitMsg.append('business')
+        update.message.reply_text("Category not specified, using default category as business")
+    
+    country = str(splitMsg[1])
+    category = str(splitMsg[2])
+
+        
+    url = "http://newsapi.org/v2/top-headlines?country={}&category={}&apiKey={}".format(str(country), category, news_api_key)
+    response = requests.get(url)
+    json_data = response.json()
+    error_image = str("https://cheapdigitalservices.com/wp-content/uploads/error-with-wordpress.png")
+    if str(json_data['status']) == 'ok' :    
+        update.message.reply_text("""Top 10 Headlines from {} in {} section \n powered by : NewsApi""".format(country, category))
+        for count in range(10):
+            # Get data from the JSON Response
+            source = json_data['articles'][count]['source']['name']
+            title = json_data['articles'][count]['title']
+            newsUrl = json_data['articles'][count]['url']
+            url_string = str(newsUrl)
+            description = json_data['articles'][count]['description']
+            image = json_data['articles'][count]['urlToImage']
+            # If no author is assigned to the headline
+            if(source == None):
+                source = 'Not Announced'
+            if(image == None):
+                image = 'https://bitsofco.de/content/images/2018/12/Screenshot-2018-12-16-at-21.06.29.png'
+
+            # Finally spam the user with news 🌚
+            context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+            context.bot.send_photo(chat_id = id, photo = str(image), caption =
+                                    f"\n<b>HeadLine  :</b><i>{escape_html(title)}</i>"
+                                    f"\n<b>Source    :</b><i>{escape_html(source)}</i>"
+                                    f'\n<b>Full News :</b><a href ="{url_string}">Link</a>',
+                                    parse_mode="HTML")  
+    else :
+        context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+        context.bot.send_photo(chat_id = id, photo = str(image), caption =
+                                    f"\n<b>The Bot has encountered some error.</b>"
+                                    f"\n<b>What can you do ?</b>"
+                                    f"\n<i>1. Retry the same command again.</i>"
+                                    f"\n<i>2. Notify the creator about the issue.</i>",
+                                    parse_mode="HTML")  
+
+
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -155,7 +208,7 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("inews", indiaNews))
     dp.add_handler(CommandHandler("news", world_news)) 
-    
+    dp.add_handler(CommandHandler("cat", categ))
 
     # log all errors
     dp.add_error_handler(error)
