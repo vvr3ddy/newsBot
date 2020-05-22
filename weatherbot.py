@@ -147,8 +147,8 @@ def categ(update, context):
         splitMsg.append('business')
         update.message.reply_text("Category not specified, using default category as business")
     
-    country = str(splitMsg[1])
-    category = str(splitMsg[2])
+    country = str(splitMsg[1]).upper()
+    category = str(splitMsg[2]).upper()
 
         
     url = "http://newsapi.org/v2/top-headlines?country={}&category={}&apiKey={}".format(str(country), category, news_api_key)
