@@ -91,28 +91,21 @@ def world_news(update, context):
     id = str(update.message.chat_id)
     news_api_key = "8a26f01fc57841feba29455a2acb0105"
     received_message = update.message.text
-    splitMsg = received_message.split(" ", 3)
+    splitMsg = received_message.split(" ", 2)
     if len(splitMsg) == 1:
-        splitMsg.append('0')
-        update.message.reply_text("Number not specified using default as 10")
         splitMsg.append('us')
         update.message.reply_text("Country not specified Using default country as US")
     
-    country = str(splitMsg[2])
+    country = str(splitMsg[1])
 
-    value = int(splitMsg[1])
-    if value > 10  :
-        value = 10
-    elif value <= 0 :
-        value = 10
         
     url = "http://newsapi.org/v2/top-headlines?country={}&apiKey={}".format(str(country), news_api_key)
     response = requests.get(url)
     json_data = response.json()
     error_image = str("https://cheapdigitalservices.com/wp-content/uploads/error-with-wordpress.png")
     if str(json_data['status']) == 'ok' :    
-        update.message.reply_text("""Top {} Headlines from {} powered by : NewsApi""".format(value, country))
-        for count in range(value):
+        update.message.reply_text("""Top 10 Headlines from {} powered by : NewsApi""".format(country))
+        for count in range(10):
             # Get data from the JSON Response
             source = json_data['articles'][count]['source']['name']
             title = json_data['articles'][count]['title']
