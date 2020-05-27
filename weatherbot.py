@@ -11,7 +11,7 @@ from pprint import pprint
 from html import escape
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from telegram import bot, chat, update
+from telegram import ParseMode, bot, chat, update
 import telegram
 
 
@@ -33,6 +33,25 @@ def escape_html(message):
 def start(update, context):
     """Send a message when the command /start is issued."""
     update.message.reply_text('Hi 😊')
+
+
+def help(update, context):
+    """Send a message when the command /help is issued."""
+    id = str(update.message.chat_id)
+    context.bot.send_message(chat_id = id, 
+    text =f'\n<b>You have requested for help.</b>'
+          f'\nCurrently the bot offers the following functionality'
+          f'\nwith the following usage examples.',
+        parse_mode=ParseMode.HTML)
+
+    context.bot.send_message(chat_id = id, text =
+    f'\n<b>COUNTRY SPECIFIC NEWS </b>'
+    f'\nTo get a feed of <b>NEWS</b> for a <b>country</b> of your choice'
+    f'\nyou must use the following syntax..\n\n'
+    f'\n"/news {escape_html("<two digit country code>")}"'
+    f'\n<b>For example </b>: {escape_html("/news US or /news IN")}',
+    parse_mode=ParseMode.HTML)
+
 
 def indiaNews(update, context):
     id = str(update.message.chat_id)
@@ -98,10 +117,14 @@ def world_news(update, context):
     
     country = str(splitMsg[1])
 
-        
+    #Set the URL for fetching NEWS
     url = "http://newsapi.org/v2/top-headlines?country={}&apiKey={}".format(str(country), news_api_key)
+    #check the response of JSON
     response = requests.get(url)
+    #Retrieve JSON DATA
     json_data = response.json()
+
+    #We see that some news do not have any images, so the feed stops. Give this a temp fix
     error_image = str("https://cheapdigitalservices.com/wp-content/uploads/error-with-wordpress.png")
     if str(json_data['status']) == 'ok' :    
         update.message.reply_text("""Top 10 Headlines from {} powered by : NewsApi""".format(country))
@@ -209,6 +232,7 @@ def main():
     dp.add_handler(CommandHandler("inews", indiaNews))
     dp.add_handler(CommandHandler("news", world_news)) 
     dp.add_handler(CommandHandler("cat", categ))
+    dp.add_handler(CommandHandler("help", help))
 
     # log all errors
     dp.add_error_handler(error)
