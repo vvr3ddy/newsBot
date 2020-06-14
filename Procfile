@@ -1,1 +1,1 @@
-worker: python3 weatherbot.py
+worker: python3 -m mods
