@@ -9,8 +9,8 @@ import json
 import simplejson
 from pprint import pprint
 from html import escape
-
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import CallbackQueryHandler, CommandHandler, ConversationHandler, Filters, MessageHandler, Updater
 from telegram import ParseMode, bot, chat, update
 import telegram
 
@@ -24,6 +24,8 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
+FIRST = range(1)
+I_NEWS, NEWS, GUIDE, CAT = range(4)
 
 def escape_html(message):
     return message.replace("&", "&amp;").replace("<", "&lt;")
@@ -32,26 +34,7 @@ def escape_html(message):
 # context. Error handlers also receive the raised TelegramError object in error.
 def start(update, context):
     """Send a message when the command /start is issued."""
-    update.message.reply_text('Hi 😊')
-
-
-def help(update, context):
-    """Send a message when the command /help is issued."""
-    id = str(update.message.chat_id)
-    context.bot.send_message(chat_id = id, 
-    text =f'\n<b>You have requested for help.</b>'
-          f'\nCurrently the bot offers the following functionality'
-          f'\nwith the following usage examples.',
-        parse_mode=ParseMode.HTML)
-
-    context.bot.send_message(chat_id = id, text =
-    f'\n<b>COUNTRY SPECIFIC NEWS </b>'
-    f'\nTo get a feed of <b>NEWS</b> for a <b>country</b> of your choice'
-    f'\nyou must use the following syntax..\n\n'
-    f'\n"/news {escape_html("<two digit country code>")}"'
-    f'\n<b>For example </b>: {escape_html("/news US or /news IN")}',
-    parse_mode=ParseMode.HTML)
-
+    update.message.reply_text('Hi 😊') 
 
 def indiaNews(update, context):
     id = str(update.message.chat_id)
@@ -223,7 +206,7 @@ def main():
     # Post version 12 this will no longer be necessary
     bot_token = os.environ.get("BOT_TOKEN","")
     updater = Updater(bot_token, use_context=True)
-
+    
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
@@ -232,7 +215,9 @@ def main():
     dp.add_handler(CommandHandler("inews", indiaNews))
     dp.add_handler(CommandHandler("news", world_news)) 
     dp.add_handler(CommandHandler("cat", categ))
-    dp.add_handler(CommandHandler("help", help))
+
+    # Add ConversationHandler to dispatcher that will be used for handling
+    # updates
 
     # log all errors
     dp.add_error_handler(error)
