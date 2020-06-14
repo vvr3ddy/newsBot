@@ -1,1 +1,1 @@
-worker: python3 -m mods
+worker: python3 -m news_bot
