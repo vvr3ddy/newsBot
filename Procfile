@@ -1,1 +1,1 @@
-worker: python3 -m news_bot
+worker: python3 news_bot
