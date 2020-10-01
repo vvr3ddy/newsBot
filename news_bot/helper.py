@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Simple inline keyboard bot with multiple CallbackQueryHandlers.
+"""Help module for newsBot
 
 This Bot uses the Updater class to handle the bot.
 First, a few callback functions are defined as callback query handler. Then, those functions are
@@ -25,7 +25,7 @@ def escape_html(message):
     return message.replace("&", "&amp;").replace("<", "&lt;")
 
 
-# Stages
+# Stages of MESSAGE calling sequences
 FIRST = range(1)
 # Callback data
 
@@ -55,6 +55,7 @@ def help(update, context):
         reply_markup=reply_markup, parse_mode="HTML"
     )
     # Tell ConversationHandler that we're in state `FIRST` now
+    # FIRST State is the initial help message
     return FIRST
 
 #FIRST BUTTON
