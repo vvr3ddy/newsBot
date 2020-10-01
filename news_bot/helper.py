@@ -27,7 +27,7 @@ def escape_html(message):
     return message.replace("&", "&amp;").replace("<", "&lt;")
 
 
-# Stages
+# Stages of MESSAGE calling sequences
 FIRST = range(1)
 # Callback data
 
