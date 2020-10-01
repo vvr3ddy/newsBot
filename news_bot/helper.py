@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Simple inline keyboard bot with multiple CallbackQueryHandlers.
+"""Help module for newsBot
 
 This Bot uses the Updater class to handle the bot.
 First, a few callback functions are defined as callback query handler. Then, those functions are
