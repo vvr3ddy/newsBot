@@ -173,14 +173,6 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
-    # Setup conversation handler with the states FIRST and SECOND
-    # Use the pattern parameter to pass CallbackQueries with specific
-    # data pattern to the corresponding handlers.
-    # ^ means "start of line/string"
-    # $ means "end of line/string"
-    # So ^ABC$ will only allow 'ABC'
-
-
 
     #CODE MODIFIED BY VVR
     conv_handler = ConversationHandler(
