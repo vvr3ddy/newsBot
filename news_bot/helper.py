@@ -7,9 +7,7 @@ First, a few callback functions are defined as callback query handler. Then, tho
 passed to the Dispatcher and registered at their respective places.
 Then, the bot is started and runs until we press Ctrl-C on the command line.
 Usage:
-Example of a bot that uses inline keyboard that has multiple CallbackQueryHandlers arranged in a
-ConversationHandler.
-Send /help to initiate the conversation.
+Send /start to initiate the conversation.
 Press Ctrl-C on the command line to stop the bot.
 """
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
