@@ -57,6 +57,7 @@ def help(update, context):
         reply_markup=reply_markup, parse_mode="HTML"
     )
     # Tell ConversationHandler that we're in state `FIRST` now
+    # FIRST State is the initial help message
     return FIRST
 
 #FIRST BUTTON
