@@ -87,7 +87,7 @@ def indiaNews(update, context):
                                     parse_mode="HTML")  
     else :
         #bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
-        context.bot.send_photo(chat_id = id, photo = str(image), caption =
+        context.bot.send_photo(chat_id = id, photo = str(error_image), caption =
                                     f"\n<b>The Bot has encountered some error.</b>"
                                     f"\n<b>What can you do ?</b>"
                                     f"\n<i>1. Retry the same command again.</i>"
@@ -142,7 +142,7 @@ def world_news(update, context):
                                     parse_mode="HTML")  
     else :
         context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
-        context.bot.send_photo(chat_id = id, photo = str(image), caption =
+        context.bot.send_photo(chat_id = id, photo = str(error_image), caption =
                                     f"\n<b>The Bot has encountered some error.</b>"
                                     f"\n<b>What can you do ?</b>"
                                     f"\n<i>1. Retry the same command again.</i>"
@@ -169,7 +169,7 @@ def categ(update, context):
     url = "http://newsapi.org/v2/top-headlines?country={}&category={}&apiKey={}".format(str(country), category, news_api_key)
     response = requests.get(url)
     json_data = response.json()
-    error_image = str("https://cheapdigitalservices.com/wp-content/uploads/error-with-wordpress.png")
+    error_image = str("https://pixabay.com/get/55e0d343435baf14f6da8c7dda353678153dd9e35458734e_1280.png")
     if str(json_data['status']) == 'ok' :    
         update.message.reply_text("""Top 10 Headlines from {} in {} section \n powered by : NewsApi""".format(country, category))
         for count in range(10):
@@ -195,7 +195,7 @@ def categ(update, context):
                                     parse_mode="HTML")  
     else :
         context.bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
-        context.bot.send_photo(chat_id = id, photo = str(image), caption =
+        context.bot.send_photo(chat_id = id, photo = str(error_image), caption =
                                     f"\n<b>The Bot has encountered some error.</b>"
                                     f"\n<b>What can you do ?</b>"
                                     f"\n<i>1. Retry the same command again.</i>"
