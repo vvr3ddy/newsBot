@@ -5,8 +5,7 @@
 import os
 import logging
 import requests
-import json
-import simplejson
+import simplejson as json
 from pprint import pprint
 from html import escape
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
