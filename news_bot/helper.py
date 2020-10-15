@@ -14,6 +14,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, ConversationHandler
 import logging
 import os
+from autologging import logged, traced
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -21,6 +22,8 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+@traced
+@logged
 def escape_html(message):
     return message.replace("&", "&amp;").replace("<", "&lt;")
 
@@ -34,6 +37,8 @@ I_NEWS, NEWS, GUIDE, CAT = range(4)
 
 
 #HELP COMMAND TO START THE HELP
+@traced
+@logged
 def help(update, context):
     """Send message on `/help`."""
     # Get user that sent /start and log his name
@@ -59,6 +64,8 @@ def help(update, context):
     return FIRST
 
 #FIRST BUTTON
+@traced
+@logged
 def guide(update, context):
     """Show new choice of buttons"""
     query = update.callback_query
@@ -85,6 +92,8 @@ def guide(update, context):
 
 
 #SECOND BUTTON
+@traced
+@logged
 def i_news(update, context):
     """Show new choice of buttons"""
     query = update.callback_query
@@ -107,6 +116,8 @@ def i_news(update, context):
     return FIRST
 
 #THIRD BUTTON
+@traced
+@logged
 def news(update, context):
     """Show new choice of buttons"""
     query = update.callback_query
@@ -133,7 +144,8 @@ def news(update, context):
     )
     return FIRST
 
-
+@traced
+@logged
 def cat_help(update, context):
     """Show new choice of buttons"""
     query = update.callback_query
@@ -159,11 +171,14 @@ def cat_help(update, context):
     )
     return FIRST
 
+@traced
+@logged
 def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
-
+@traced
+@logged
 def main():
     # Create the Updater and pass it your bot's token.
     updater = Updater(os.environ.get("BOT_TOKEN",""), use_context=True)

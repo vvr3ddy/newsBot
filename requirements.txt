@@ -2,3 +2,4 @@ telegram==0.0.1
 python-telegram-bot
 requests
 simplejson
+Autologging==1.3.2
