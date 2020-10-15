@@ -13,7 +13,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, ConversationHandler, Filters, MessageHandler, Updater
 from telegram import ParseMode, bot, chat, update
 import telegram
-
+from autologging import logged, traced
 
 
 
@@ -27,15 +27,21 @@ logger = logging.getLogger(__name__)
 FIRST = range(1)
 I_NEWS, NEWS, GUIDE, CAT = range(4)
 
+@traced
+@logged
 def escape_html(message):
     return message.replace("&", "&amp;").replace("<", "&lt;")
 
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
+@traced
+@logged
 def start(update, context):
     """Send a message when the command /start is issued."""
     update.message.reply_text('Hi 😊') 
 
+@traced
+@logged
 def indiaNews(update, context):
     id = str(update.message.chat_id)
     news_api_key = "8a26f01fc57841feba29455a2acb0105"
@@ -88,6 +94,8 @@ def indiaNews(update, context):
                                     f"\n<i>2. Notify the creator about the issue.</i>",
                                     parse_mode="HTML")  
 
+@traced
+@logged
 def world_news(update, context):
     """Send a message when the command /news is issued."""
     id = str(update.message.chat_id)
@@ -140,7 +148,8 @@ def world_news(update, context):
                                     f"\n<i>1. Retry the same command again.</i>"
                                     f"\n<i>2. Notify the creator about the issue.</i>",
                                     parse_mode="HTML")  
-
+@traced
+@logged
 def categ(update, context):
     """Send a message when the command /news is issued."""
     id = str(update.message.chat_id)
@@ -194,7 +203,8 @@ def categ(update, context):
                                     parse_mode="HTML")  
 
 
-
+@traced
+@logged
 def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
